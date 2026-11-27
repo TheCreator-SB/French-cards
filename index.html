@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1020">
+    <title>FrenchLex — Advanced French Vocabulary</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<div class="app">
+
+<aside class="sidebar" id="sidebar">
+    <div class="brand">
+        <div class="brand-icon">🇫🇷</div>
+        <div>
+            <h1>FrenchLex</h1>
+            <small>Advanced Vocabulary</small>
+        </div>
+    </div>
+
+    <nav class="nav">
+        <button class="active" data-view="dashboard">
+            <span class="nav-icon">◈</span>
+            <span>لوحة التحكم</span>
+        </button>
+        <button data-view="study">
+            <span class="nav-icon">🎯</span>
+            <span>الدراسة والمراجعة</span>
+        </button>
+        <button data-view="library">
+            <span class="nav-icon">📚</span>
+            <span>مكتبة المفردات</span>
+        </button>
+        <button data-view="settings">
+            <span class="nav-icon">⚙</span>
+            <span>الإعدادات والبيانات</span>
+        </button>
+    </nav>
+
+    <div class="sidebar-footer">
+        FrenchLex يعمل محلياً.<br>
+        بياناتك محفوظة في LocalStorage.<br>
+        لا تحتاج إلى حساب أو خادم.
+    </div>
+</aside>
+
+<main class="main">
+
+    <div class="mobile-top">
+        <button class="btn" id="menuBtn">☰</button>
+        <strong>🇫🇷 FrenchLex</strong>
+        <span></span>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="view active" id="dashboard">
+        <div class="topbar">
+            <div class="page-title">
+                <h2>لوحة التحكم</h2>
+                <p>طوّر حصيلتك الفرنسية من خلال الاسترجاع النشط والتكرار المتباعد.</p>
+            </div>
+            <button class="btn btn-primary" id="startStudyBtn">▶ ابدأ المراجعة</button>
+        </div>
+
+        <div class="stats">
+            <div class="card-panel stat">
+                <div class="stat-label">إجمالي البطاقات</div>
+                <div class="stat-value" id="totalStat">0</div>
+                <div class="stat-icon">📚</div>
+            </div>
+            <div class="card-panel stat">
+                <div class="stat-label">مستحقة الآن</div>
+                <div class="stat-value" id="dueStat">0</div>
+                <div class="stat-icon">🎯</div>
+            </div>
+            <div class="card-panel stat">
+                <div class="stat-label">تم إتقانها</div>
+                <div class="stat-value" id="masteredStat">0</div>
+                <div class="stat-icon">🏆</div>
+            </div>
+            <div class="card-panel stat">
+                <div class="stat-label">جلسات الدراسة</div>
+                <div class="stat-value" id="sessionStat">0</div>
+                <div class="stat-icon">🔥</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+
+            <div class="card-panel panel-padding">
+                <div class="section-title">
+                    <h3>التقدم العام</h3>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" id="globalProgress" style="width:0%"></div>
+                </div>
+
+                <div class="progress-wrap">
+                    <div class="progress-label">
+                        <span>بطاقات تمت مراجعتها مرة واحدة على الأقل</span>
+                        <span id="reviewedLabel">0 / 0</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" id="reviewedProgress" style="width:0%"></div>
+                    </div>
+                </div>
+
+                <div style="height:18px"></div>
+
+                <div class="session-box">
+                    <strong id="todayDueText">0</strong>
+                    <span>بطاقة مستحقة للمراجعة اليوم</span>
+                </div>
+            </div>
+
+            <div class="card-panel panel-padding">
+                <div class="section-title">
+                    <h3>آخر البطاقات</h3>
+                    <span>نشاطك الأخير</span>
+                </div>
+                <div class="recent-list" id="recentList"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- STUDY -->
+    <section class="view" id="study">
+        <div class="topbar">
+            <div class="page-title">
+                <h2>الدراسة والمراجعة</h2>
+                <p>حاول تذكر المعنى قبل قلب البطاقة.</p>
+            </div>
+        </div>
+
+        <div class="study-container">
+            <div class="study-header">
+                <span class="study-count" id="studyCount">0 بطاقة مستحقة</span>
+                <button class="btn" id="shuffleBtn">🔀 خلط</button>
+            </div>
+
+            <div id="studyArea"></div>
+        </div>
+    </section>
+
+    <!-- LIBRARY -->
+    <section class="view" id="library">
+        <div class="topbar">
+            <div class="page-title">
+                <h2>مكتبة المفردات</h2>
+                <p>استعرض وعدّل وأضف كلماتك الفرنسية.</p>
+            </div>
+            <button class="btn btn-primary" id="addBtn">＋ إضافة بطاقة</button>
+        </div>
+
+        <div class="card-panel panel-padding">
+            <div class="library-tools">
+                <input class="search" id="searchInput" type="search" placeholder="ابحث عن كلمة فرنسية أو معنى عربي...">
+                <select class="select" id="posFilter">
+                    <option value="">كل الأنواع</option>
+                    <option value="Nom">Nom</option>
+                    <option value="Verbe">Verbe</option>
+                    <option value="Adjectif">Adjectif</option>
+                    <option value="Adverbe">Adverbe</option>
+                    <option value="Expression">Expression</option>
+                    <option value="Pronom">Pronom</option>
+                </select>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>الكلمة</th>
+                            <th>النوع</th>
+                            <th>المعنى الأول</th>
+                            <th>المعنى الثاني</th>
+                            <th>المراجعة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="libraryBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view" id="settings">
+        <div class="topbar">
+            <div class="page-title">
+                <h2>الإعدادات والبيانات</h2>
+                <p>تحكم في قاعدة بياناتك واحفظ نسخة احتياطية محلياً.</p>
+            </div>
+        </div>
+
+        <div class="settings-grid">
+
+            <div class="card-panel setting-card">
+                <h3>💾 النسخ الاحتياطي</h3>
+                <p>
+                    صدّر قاعدة البيانات وجدول المراجعة إلى ملف JSON.
+                    يمكنك استعادته لاحقاً على نفس الجهاز أو متصفح آخر.
+                </p>
+                <div class="setting-actions">
+                    <button class="btn btn-primary" id="exportBtn">⬇ تصدير JSON</button>
+                    <button class="btn" id="importBtn">⬆ استيراد JSON</button>
+                    <input type="file" id="importFile" accept=".json" hidden>
+                </div>
+            </div>
+
+            <div class="card-panel setting-card">
+                <h3>🔄 قاعدة البيانات</h3>
+                <p>
+                    استعادة البطاقات الأصلية ستعيد قاعدة البيانات إلى
+                    الكلمات الـ200 المضمنة في التطبيق.
+                </p>
+                <button class="btn btn-warning" id="restoreBtn">استعادة البطاقات الأصلية</button>
+            </div>
+
+            <div class="card-panel setting-card">
+                <h3>⚠️ إعادة التعيين</h3>
+                <p>
+                    سيؤدي ذلك إلى حذف تقدم التكرار المتبادل والجلسات،
+                    مع الإبقاء على بطاقاتك الحالية.
+                </p>
+                <button class="btn btn-danger" id="resetProgressBtn">إعادة تعيين التقدم</button>
+            </div>
+
+            <div class="card-panel setting-card">
+                <h3>🗑 مسح كامل</h3>
+                <p>
+                    حذف قاعدة البيانات والتقدم من LocalStorage وإعادة
+                    تحميل الـ200 بطاقة الأصلية.
+                </p>
+                <button class="btn btn-danger" id="factoryBtn">إعادة ضبط المصنع</button>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="cardModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="modalTitle">إضافة بطاقة جديدة</h3>
+            <button class="icon-btn" id="closeModal">✕</button>
+        </div>
+
+        <form id="cardForm">
+            <div class="modal-body">
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label>الكلمة الفرنسية</label>
+                        <input id="fWord" required placeholder="مثال: la résilience">
+                    </div>
+
+                    <div class="field">
+                        <label>النوع النحوي</label>
+                        <select id="fPos">
+                            <option value="Nom">Nom — اسم</option>
+                            <option value="Verbe">Verbe — فعل</option>
+                            <option value="Adjectif">Adjectif — صفة</option>
+                            <option value="Adverbe">Adverbe — ظرف</option>
+                            <option value="Expression">Expression — تعبير</option>
+                            <option value="Pronom">Pronom — ضمير</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>المعنى العربي الأول</label>
+                        <input id="fMeaning1" required>
+                    </div>
+
+                    <div class="field">
+                        <label>المعنى العربي الثاني</label>
+                        <input id="fMeaning2" required>
+                    </div>
+
+                    <div class="field full">
+                        <label>المثال الفرنسي</label>
+                        <textarea id="fExample" required></textarea>
+                    </div>
+
+                    <div class="field full">
+                        <label>ترجمة المثال بالعربية</label>
+                        <textarea id="fTranslation" required></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">حفظ البطاقة</button>
+                <button type="button" class="btn" id="cancelModal">إلغاء</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="./app.js" defer></script>
+
+</body>
+</html>
